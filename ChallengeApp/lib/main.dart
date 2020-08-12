@@ -133,7 +133,7 @@ class PhotosSection extends StatelessWidget {
       minChildSize: 0.11,
       maxChildSize: 0.86,
       color: Colors.black,
-      child: Wrap(
+      child: Column(
         children: [
           Row(
             children: [
@@ -149,11 +149,16 @@ class PhotosSection extends StatelessWidget {
               ),
             ],
           ),
-          ...pictures.map((pic) {
-            return Container(
-              width: size.width *0.25,
-              child: Image.asset(pic));
-          }),
+          Expanded(
+            child: GridView.count(
+              crossAxisCount: 2,
+              mainAxisSpacing: 10,
+              children: pictures.map((pic) {
+              return Container(
+                child: Image.asset(pic));
+            }).toList()
+            ),
+          )
         ],
       )
     );
