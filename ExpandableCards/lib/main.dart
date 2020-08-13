@@ -174,6 +174,7 @@ class _CardListsState extends State<CardLists>
 
   AnimationController _controller;
   int currentIndex;
+  List<int> order;
 
   @override
   void initState() {
@@ -182,12 +183,21 @@ class _CardListsState extends State<CardLists>
       vsync: this,
       duration: Duration(milliseconds: 500)
     );
+   int currentIndex = 0;
+   order = List.generate(3, (i) => i);
 
     widget.state.stream.asBroadcastStream().listen( (state) {
-        print("new letter");
         switch(state) {
           case CardState.FullScreen:
             _controller.forward();
+            setState( () {
+              order.sort( (a, b) {
+                if (a == currentIndex) return b;
+                if (b == currentIndex) return a;
+                  return (a - currentIndex) < (b - currentIndex).abs() ? b: a;
+              });
+              print(order);
+            });
             break;
           case CardState.Expanded:
             if(!_controller.isDismissed) {
@@ -210,19 +220,24 @@ class _CardListsState extends State<CardLists>
 
   @override
   Widget build(BuildContext context) {
+
     return Center(
-      child: Column(
-            children: List.generate(
-              3,
-              (i) => GestureDetector(
-                onTap: () {
-                  setState( () => currentIndex = i);
-                  print("sending");
-                  widget.state.add(CardState.FullScreen);
-                  print("sent");
-                },
-                child: buildCard(context, i),
-              )),
+      child: Stack(
+            overflow: Overflow.visible,
+            children: order.map(
+              (i) => Positioned(
+                top: 20 + i * (widget.height + 20),
+                left: 0,
+                child: GestureDetector(
+                  onTap: () {
+                    setState( () => currentIndex = i);
+                    print("sending");
+                    widget.state.add(CardState.FullScreen);
+                    print("sent");
+                  },
+                  child: buildCard(context, i),
+                ),
+              )).toList(),
             )
     );
   }
@@ -242,24 +257,26 @@ class _CardListsState extends State<CardLists>
 
               // FullScreen Animation
               double scaleX = 1.0 + (fullScreenAnimation.value * 0.1);
-              double scaleY = 1.0 + (fullScreenAnimation.value * 0.5);
+              double scaleY = 1.0 + (fullScreenAnimation.value * 2.5);
               double rotateFull = -math.pi * fullScreenAnimation.value * 0.25;
 
               return Opacity(
                 opacity: widget.inAnimation.value,
                 child: Transform(
-                  alignment: Alignment.center,
+                  alignment: Alignment.topCenter,
                   transform: Matrix4.identity()
                             ..setEntry(3, 2, 0.001)
                             ..translate(0.0, translateYin)
                             ..scale(scaleX, scaleY)
-                            ..rotateX(rotateFull),
+                            ..translate(0.0, fullScreenAnimation.value * -20),
                   child: Container(
                     margin: EdgeInsets.only(top: 20),
                     width: widget.width,
                     height: widget.height,
+                    child: Text("$index"),
                     decoration: BoxDecoration(
-                      color: Color(0xFF473245),
+                      color: 
+                        Color.lerp(Color(0xFF473245), Colors.black, fullScreenAnimation.value*index/5),
                       borderRadius: BorderRadius.circular(20),
                     )),
                 ),
