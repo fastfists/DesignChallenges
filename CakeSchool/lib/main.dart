@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+mport 'package:flutter/material.dart';
 
 import 'screens/details_page.dart';
 import 'screens/home_page.dart';
