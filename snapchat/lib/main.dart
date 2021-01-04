@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       routes: {
-        "/search" : (context) => SearchPage(),
+        "/search": (context) => SearchPage(),
       },
       initialRoute: '/search',
       debugShowCheckedModeBanner: false,
@@ -32,8 +32,7 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text("hi"),
       ),
-      body: Center(
-      ),
+      body: Center(),
     );
   }
 }
