@@ -39,7 +39,7 @@ var backgroundGradient = LinearGradient(
   end: Alignment.bottomCenter,
 );
 
-whiteTextStyle(context) => Theme.of(context)
+whiteTextStyle(BuildContext context) => Theme.of(context)
     .textTheme
     .bodyText2
     .copyWith(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15);

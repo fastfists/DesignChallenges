@@ -31,7 +31,7 @@ class HomePage extends StatelessWidget {
               children: [
                 Align(
                     alignment: Alignment.center,
-                    child: Image.asset("assets/images/4.jpg")),
+                    child: Image.asset("assets/images/0-3.jpg")),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: SwipeButton(
@@ -70,7 +70,7 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
                 Text(
-                    "Hi everyone! I am Emily and I love building apps and participating in Hackathons. I am most experienced in Python, but I can do Java, HTML, and C++ too."),
+                    "Hi john! I am Emily and I love building apps and participating in Hackathons. I am most experienced in Python, but I can do Java, HTML, and C++ too."),
                 SingleChildScrollView(
                   child: Row(
                     children: [
