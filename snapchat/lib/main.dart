@@ -13,6 +13,12 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        dividerTheme: DividerThemeData(
+          color: Color.fromRGBO(255, 255, 255, 0.20),
+          thickness: 2,
+          endIndent: 50,
+          indent: 50,
+        ),
       ),
       routes: {
         "/search": (context) => SearchPage(),

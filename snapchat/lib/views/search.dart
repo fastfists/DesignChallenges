@@ -41,11 +41,12 @@ class SearchPage extends StatelessWidget {
               ]),
             ),
             SizedBox(height: 35),
-            SnapchatContainer(
+            SnapChatContainer(
               child: Row(children: [
                 Spacer(),
                 SnapChatSquare(
                     title: 'Edith Ford',
+                    subtitle: 'ye ye',
                     image: AssetImage("assets/images/women_of_year.png")),
                 Spacer(),
                 SnapChatSquare(
@@ -62,7 +63,7 @@ class SearchPage extends StatelessWidget {
             Text("Games and Minis",
                 style: whiteTextStyle(context).copyWith(fontSize: 20.0)),
             SizedBox(height: 5),
-            SnapchatContainer(
+            SnapChatContainer(
               child: Row(children: [
                 Spacer(),
                 SnapChatSquare(
@@ -82,7 +83,38 @@ class SearchPage extends StatelessWidget {
             SizedBox(height: 20),
             Text("Popular Snap Stars",
                 style: whiteTextStyle(context).copyWith(fontSize: 20.0)),
-            SizedBox(height: 5),
+            SizedBox(height: 10),
+            SnapChatContainer(
+                child: Column(children: [
+              SnapChatTile(
+                  image: AssetImage("assets/images/women_of_year.png"),
+                  trailing: SnapChatButton(context,
+                      name: "Subscribe", onPressed: () {}),
+                  title: "Edith Oyugi",
+                  subtitle: "Silver Crescends"),
+              Divider(),
+              SnapChatTile(
+                  image: AssetImage("assets/images/women_of_year.png"),
+                  trailing: SnapChatButton(context,
+                      name: "Subscribe", onPressed: () {}),
+                  title: "Edith Oyugi",
+                  subtitle: "Silver Crescends"),
+              Divider(),
+              SnapChatTile(
+                  image: AssetImage("assets/images/women_of_year.png"),
+                  trailing: SnapChatButton(context,
+                      name: "Subscribe", onPressed: () {}),
+                  title: "Edith Oyugi",
+                  subtitle: "Silver Crescends"),
+              Divider(),
+              SnapChatTile(
+                  image: AssetImage("assets/images/women_of_year.png"),
+                  trailing: SnapChatButton(context,
+                      name: "Subscribe", onPressed: () {}),
+                  title: "Edith Oyugi",
+                  subtitle: "Silver Crescends"),
+              Divider(),
+            ])),
           ],
         ),
       ),
@@ -90,53 +122,101 @@ class SearchPage extends StatelessWidget {
   }
 }
 
+class SnapChatTile extends StatelessWidget {
+
+  final ImageProvider image;
+  final Widget trailing;
+  final String title;
+  final String subtitle;
+
+  const SnapChatTile({
+    Key key, this.image, this.trailing, this.title, this.subtitle,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+        leading: SnapChatCircle(
+            image: AssetImage("assets/images/women_of_year.png")),
+        title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Edith Oyugi", style: whiteTextStyle(context)),
+              Text("Silver Crescends",
+                  style: whiteTextStyle(context)),
+            ]),
+        trailing: SnapChatButton(context,
+            name: "Subscribe", onPressed: () {}));
+  }
+}
+
 class SnapChatSquare extends StatelessWidget {
   final ImageProvider<Object> image;
   final String title;
+  final String subtitle;
 
   const SnapChatSquare({
     Key key,
     @required this.image,
     @required this.title,
+    this.subtitle,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return SnapchatContainer(
+    return SnapChatContainer(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(
-                width: 75,
-                height: 75,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(colors: [
-                    Color.fromRGBO(255, 255, 255, 0.70),
-                    Color(0x00FFFFFF),
-                  ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-                ),
-              ),
-              CircleAvatar(backgroundImage: image),
-            ],
-          ),
+          SnapChatCircle(image: image),
           SizedBox(height: 6),
           Text(
             title,
             style: whiteTextStyle(context),
           ),
+          if (subtitle != null) 
+              Text(subtitle, style: whiteTextStyle(context).copyWith(fontWeight: FontWeight.w400))
+          else
+            SizedBox(height: 17),
         ],
       ),
     );
   }
 }
 
-class SnapchatContainer extends StatelessWidget {
+class SnapChatCircle extends StatelessWidget {
+  const SnapChatCircle({
+    Key key,
+    @required this.image,
+  }) : super(key: key);
+
+  final ImageProvider<Object> image;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+          width: 75,
+          height: 75 - 17.0,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: LinearGradient(colors: [
+              Color.fromRGBO(255, 255, 255, 0.70),
+              Color(0x00FFFFFF),
+            ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+          ),
+        ),
+        CircleAvatar(backgroundImage: image),
+      ],
+    );
+  }
+}
+
+class SnapChatContainer extends StatelessWidget {
   final Widget child;
-  const SnapchatContainer({Key key, this.child}) : super(key: key);
+  const SnapChatContainer({Key key, this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -168,11 +248,11 @@ class SnapchatContainer extends StatelessWidget {
                   border: Border.all(color: Colors.white, width: 0.5),
                   gradient: LinearGradient(
                     colors: [
-                      Color.fromRGBO(255, 255, 255, 0.56),
+                      Color.fromRGBO(255, 255, 255, .40),
                       Color(0x00FFFFFF),
                     ],
-                    begin: Alignment.bottomRight,
-                    end: Alignment.topLeft,
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomLeft,
                   )),
               child: child)
         ]),
