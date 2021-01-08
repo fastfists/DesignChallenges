@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         "/search": (context) => SearchPage(),
+        "main": (context) => HomePage(),
       },
       initialRoute: '/search',
       debugShowCheckedModeBanner: false,

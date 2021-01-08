@@ -16,6 +16,28 @@ class SearchPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            Row(
+              children: [
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: TextFormField(
+                        style: whiteTextStyle(context).copyWith(fontSize: 14.0),
+                        decoration: InputDecoration(
+                          fillColor: Color.fromRGBO(255, 255, 255, 0.56),
+                          filled: true,
+                          border: InputBorder.none,
+                          contentPadding:
+                              EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                          hintText: "Search ...",
+                        )),
+                  ),
+                ),
+                Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Text("Cancel", style: whiteTextStyle(context))),
+              ],
+            ),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(children: <Widget>[
@@ -40,7 +62,6 @@ class SearchPage extends StatelessWidget {
                 ),
               ]),
             ),
-            SizedBox(height: 35),
             SnapChatContainer(
               child: Row(children: [
                 Spacer(),
@@ -59,7 +80,7 @@ class SearchPage extends StatelessWidget {
                 Spacer(),
               ]),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 30),
             Text("Games and Minis",
                 style: whiteTextStyle(context).copyWith(fontSize: 20.0)),
             SizedBox(height: 5),
@@ -107,13 +128,6 @@ class SearchPage extends StatelessWidget {
                   title: "Edith Oyugi",
                   subtitle: "Silver Crescends"),
               Divider(),
-              SnapChatTile(
-                  image: AssetImage("assets/images/women_of_year.png"),
-                  trailing: SnapChatButton(context,
-                      name: "Subscribe", onPressed: () {}),
-                  title: "Edith Oyugi",
-                  subtitle: "Silver Crescends"),
-              Divider(),
             ])),
           ],
         ),
@@ -123,14 +137,17 @@ class SearchPage extends StatelessWidget {
 }
 
 class SnapChatTile extends StatelessWidget {
-
   final ImageProvider image;
   final Widget trailing;
   final String title;
   final String subtitle;
 
   const SnapChatTile({
-    Key key, this.image, this.trailing, this.title, this.subtitle,
+    Key key,
+    this.image,
+    this.trailing,
+    this.title,
+    this.subtitle,
   }) : super(key: key);
 
   @override
@@ -138,15 +155,11 @@ class SnapChatTile extends StatelessWidget {
     return ListTile(
         leading: SnapChatCircle(
             image: AssetImage("assets/images/women_of_year.png")),
-        title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Edith Oyugi", style: whiteTextStyle(context)),
-              Text("Silver Crescends",
-                  style: whiteTextStyle(context)),
-            ]),
-        trailing: SnapChatButton(context,
-            name: "Subscribe", onPressed: () {}));
+        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text("Edith Oyugi", style: whiteTextStyle(context)),
+          Text("Silver Crescends", style: whiteTextStyle(context)),
+        ]),
+        trailing: SnapChatButton(context, name: "Subscribe", onPressed: () {}));
   }
 }
 
@@ -174,8 +187,10 @@ class SnapChatSquare extends StatelessWidget {
             title,
             style: whiteTextStyle(context),
           ),
-          if (subtitle != null) 
-              Text(subtitle, style: whiteTextStyle(context).copyWith(fontWeight: FontWeight.w400))
+          if (subtitle != null)
+            Text(subtitle,
+                style: whiteTextStyle(context)
+                    .copyWith(fontWeight: FontWeight.w400))
           else
             SizedBox(height: 17),
         ],
@@ -216,7 +231,11 @@ class SnapChatCircle extends StatelessWidget {
 
 class SnapChatContainer extends StatelessWidget {
   final Widget child;
-  const SnapChatContainer({Key key, this.child}) : super(key: key);
+  final EdgeInsets padding;
+
+  const SnapChatContainer(
+      {Key key, this.child, this.padding = const EdgeInsets.all(10)})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -242,7 +261,7 @@ class SnapChatContainer extends StatelessWidget {
                 color: Color.fromRGBO(255, 255, 255, 0.15)),
           ),
           Container(
-              padding: EdgeInsets.all(10),
+              padding: padding,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: Colors.white, width: 0.5),
