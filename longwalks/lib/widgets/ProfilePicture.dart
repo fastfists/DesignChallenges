@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:longwalks/constants.dart';
 
 class ProfilePicture extends StatelessWidget {
   final bool border;

@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -182,7 +183,7 @@ class ChallengeSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Stack(
-            overflow: Overflow.visible,
+            clipBehavior: Clip.hardEdge,
             children: [
               Text(
                 "Avalible Challenges",
@@ -301,7 +302,7 @@ class NameSection extends StatelessWidget {
             overflow: Overflow.visible,
             children: [
               Text(
-                "Edith Oyugi",
+                "Stacey James",
                 style: kBoldMain,
               ),
               Positioned(
@@ -320,7 +321,7 @@ class NameSection extends StatelessWidget {
             ],
           ),
           SizedBox(height: 10),
-          Text("Founder of Crescends Medical",
+          Text("Pharmicist",
             style: kStyleSecondary,
           ),
           SizedBox(height: 30),

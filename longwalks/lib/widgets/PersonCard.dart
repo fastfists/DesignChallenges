@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:longwalks/constants.dart';
+import 'package:longwalks/widgets/ProfilePicture.dart';
 
 class PersonCard extends StatelessWidget {
   const PersonCard({

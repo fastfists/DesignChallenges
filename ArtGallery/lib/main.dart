@@ -53,11 +53,14 @@ class _HomePageState extends State<HomePage> {
         bottomNavigationBar: BottomNavigationBar(
           showSelectedLabels: false,
           showUnselectedLabels: false,
+          selectedItemColor: Colors.black,
+          unselectedItemColor: Colors.grey,
+          currentIndex: 1,
           items: [
             BottomNavigationBarItem(
                 title: Text(" you wont see me"), icon: Icon(Icons.disc_full)),
             BottomNavigationBarItem(
-                title: Text(" you wont see me"), icon: Icon(Icons.build)),
+                title: Text(" you wont see me"), icon: Icon(Icons.home)),
             BottomNavigationBarItem(
                 title: Text(" you wont see me"), icon: Icon(Icons.build)),
           ],
@@ -72,7 +75,7 @@ class _HomePageState extends State<HomePage> {
                       crossAxisSpacing: 20,
                       mainAxisSpacing: 10,
                       children: List.generate(
-                        22,
+                        10,
                         (i) => GestureDetector(
                             onTap: () => Navigator.of(context).pushNamed(
                                   "details",

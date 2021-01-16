@@ -4,8 +4,7 @@ import 'constants.dart';
 import 'main.dart';
 
 class DetailsPage extends StatefulWidget {
-  final int index;
-  DetailsPage({Key key, this.index}) : super(key:key);
+  DetailsPage({Key key}) : super(key:key);
 
   @override
   _DetailsPageState createState() => _DetailsPageState();
@@ -13,13 +12,14 @@ class DetailsPage extends StatefulWidget {
 
 class _DetailsPageState extends State<DetailsPage> {
 
+  int index;
   changeIndex(int i) {
-    setState( () { index = i} );
+    setState( () { index = i;} );
   }
 
   @override
   Widget build(BuildContext context) {
-    int index = ModalRoute.of(context).settings.arguments;
+    index = ModalRoute.of(context).settings.arguments;
     var size = MediaQuery.of(context).size;
 
     var child = Container(
@@ -32,7 +32,7 @@ class _DetailsPageState extends State<DetailsPage> {
         height: size.height,
         child: Stack(
           fit: StackFit.loose,
-          overflow: Overflow.visible,
+          clipBehavior: Clip.hardEdge,
           children: [
             GestureDetector(
                 child: Align(alignment: Alignment.centerRight, child: child)),
