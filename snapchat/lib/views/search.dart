@@ -62,21 +62,22 @@ class SearchPage extends StatelessWidget {
                 ),
               ]),
             ),
+            SizedBox(height: 15),
             SnapChatContainer(
               child: Row(children: [
                 Spacer(),
                 SnapChatSquare(
                     title: 'Edith Ford',
                     subtitle: 'ye ye',
-                    image: AssetImage("assets/images/women_of_year.png")),
+                    image: AssetImage("assets/images/my_women_of_year.png")),
                 Spacer(),
                 SnapChatSquare(
                     title: 'Edith Ford',
-                    image: AssetImage("assets/images/women_of_year.png")),
+                    image: AssetImage("assets/images/my_women_of_year.png")),
                 Spacer(),
                 SnapChatSquare(
                     title: 'Edith Ford',
-                    image: AssetImage("assets/images/women_of_year.png")),
+                    image: AssetImage("assets/images/my_women_of_year.png")),
                 Spacer(),
               ]),
             ),
@@ -89,15 +90,15 @@ class SearchPage extends StatelessWidget {
                 Spacer(),
                 SnapChatSquare(
                     title: 'Edith Ford',
-                    image: AssetImage("assets/images/women_of_year.png")),
+                    image: AssetImage("assets/images/my_women_of_year.png")),
                 Spacer(),
                 SnapChatSquare(
                     title: 'Edith Ford',
-                    image: AssetImage("assets/images/women_of_year.png")),
+                    image: AssetImage("assets/images/my_women_of_year.png")),
                 Spacer(),
                 SnapChatSquare(
                     title: 'Edith Ford',
-                    image: AssetImage("assets/images/women_of_year.png")),
+                    image: AssetImage("assets/images/my_women_of_year.png")),
                 Spacer(),
               ]),
             ),
@@ -108,26 +109,33 @@ class SearchPage extends StatelessWidget {
             SnapChatContainer(
                 child: Column(children: [
               SnapChatTile(
-                  image: AssetImage("assets/images/women_of_year.png"),
+                  image: AssetImage("assets/images/my_women_of_year.png"),
                   trailing: SnapChatButton(context,
                       name: "Subscribe", onPressed: () {}),
                   title: "Edith Oyugi",
                   subtitle: "Silver Crescends"),
               Divider(),
               SnapChatTile(
-                  image: AssetImage("assets/images/women_of_year.png"),
+                  image: AssetImage("assets/images/my_women_of_year.png"),
                   trailing: SnapChatButton(context,
                       name: "Subscribe", onPressed: () {}),
                   title: "Edith Oyugi",
                   subtitle: "Silver Crescends"),
               Divider(),
               SnapChatTile(
-                  image: AssetImage("assets/images/women_of_year.png"),
+                  image: AssetImage("assets/images/my_women_of_year.png"),
                   trailing: SnapChatButton(context,
                       name: "Subscribe", onPressed: () {}),
                   title: "Edith Oyugi",
                   subtitle: "Silver Crescends"),
               Divider(),
+              SnapChatTile(
+                  image: AssetImage("assets/images/my_women_of_year.png"),
+                  trailing: SnapChatButton(context,
+                      name: "Subscribe", onPressed: () {}),
+                  title: "Edith Oyugi",
+                  subtitle: "Silver Crescends"),
+              // Divider(),
             ])),
           ],
         ),
@@ -154,12 +162,16 @@ class SnapChatTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
         leading: SnapChatCircle(
-            image: AssetImage("assets/images/women_of_year.png")),
-        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text("Edith Oyugi", style: whiteTextStyle(context)),
-          Text("Silver Crescends", style: whiteTextStyle(context)),
-        ]),
-        trailing: SnapChatButton(context, name: "Subscribe", onPressed: () {}));
+            image: AssetImage("assets/images/my_women_of_year.png")),
+        title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Edith Oyugi", style: whiteTextStyle(context)),
+              Text("Silver Crescends",
+                  style: whiteTextStyle(context)),
+            ]),
+        trailing: SnapChatButton(context,
+            name: "Subscribe", onPressed: () {}));
   }
 }
 

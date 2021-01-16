@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'ProfilePicture.dart';
 
 class BottomNavBar extends StatelessWidget {
   const BottomNavBar({

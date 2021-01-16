@@ -25,7 +25,7 @@ class HomePage extends StatelessWidget {
                 SizedBox(height: 20),
                 CakeView(
                   cakeName: "Accordian Cake",
-                  imageName: "assets/images/FlashlightCake.png",
+                  imageName: "assets/images/AccordianCake.png",
                 ),
                 SizedBox(height: 20),
                 CakeView(
@@ -115,7 +115,10 @@ class CakeView extends StatelessWidget {
         Positioned(
           right: -100,
           bottom: 20,
-          child: Image.asset(imageName),
+          child: Container(
+                  width: 300,
+                  height: 450,
+                  child: Image.asset(imageName)),
         ),
       ],
     );
