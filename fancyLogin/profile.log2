@@ -1,0 +1,346 @@
+FUNCTION  <SNR>129_CompletionItems()
+    Defined: ~/.config/nvim/plugged/vim-lsc/autoload/lsc/complete.vim line 232
+Called 2 times
+Total time:   3.658031
+ Self time:   0.186529
+
+count  total (s)   self (s)
+    2              0.000003   let completion_items = []
+    2              0.000006   if type(a:completion_result) == type([])
+    2              0.000003     let completion_items = a:completion_result
+                              elseif type(a:completion_result) == type({})
+                                let completion_items = a:completion_result.items
+    2              0.000001   endif
+    2   3.657980   0.186478   call map(completion_items, {_, item -> s:CompletionItem(item)})
+    2              0.000005   let completion = {'items' : completion_items}
+    2              0.000006   for item in completion_items
+    2              0.000005     if has_key(item, 'start_col')
+    2              0.000004       let completion.start_col = item.start_col
+    2              0.000002       break
+                                endif
+    2              0.000002   endfor
+    2              0.000003   return completion
+
+FUNCTION  FugitiveHead()
+    Defined: ~/.config/nvim/plugged/vim-fugitive/plugin/fugitive.vim line 128
+Called 719 times
+Total time:   0.510136
+ Self time:   0.020305
+
+count  total (s)   self (s)
+  719   0.029605   0.008118   let dir = FugitiveGitDir(a:0 > 1 ? a:2 : -1)
+  719              0.001710   if empty(dir)
+                                return ''
+  719              0.000581   endif
+  719   0.476373   0.008029   return fugitive#Head(a:0 ? a:1 : 0, dir)
+
+FUNCTION  <SNR>112_Consume()
+    Defined: ~/.config/nvim/plugged/vim-lsc/autoload/lsc/protocol.vim line 58
+Called 91 times
+Total time:   4.744677
+ Self time:   0.520382
+
+count  total (s)   self (s)
+   91              0.017118   let message = a:server._buffer
+   91              0.017557   let end_of_header = stridx(message, "\r\n\r\n")
+   91              0.000308   if end_of_header < 0
+                                return v:false
+   91              0.000135   endif
+   91              0.021819   let headers = split(message[:end_of_header - 1], "\r\n")
+   91              0.000520   let l:message_start = end_of_header + len("\r\n\r\n")
+   91   0.005405   0.001949   let l:message_end = l:message_start + s:ContentLength(headers)
+   91              0.020085   if len(message) < l:message_end
+                                " Wait for the rest of the message to get buffered
+   28              0.000085     return v:false
+   63              0.000059   endif
+   63              0.019256   let payload = message[l:message_start : l:message_end-1]
+   63              0.018456   let remaining_message = message[l:message_end : ]
+   63              0.005119   let a:server._buffer = remaining_message
+   63              0.000096   try
+   63              0.347408     let content = json_decode(payload)
+   63              0.000502     if type(content) != type({}) | throw 1 | endif
+                              catch
+                                call lsc#message#error('Could not decode message: '.payload)
+   63              0.000079   endtry
+   63              0.000208   if exists('l:content')
+   63   0.219944   0.000928     call lsc#util#shift(a:server._out, 10, content)
+   63              0.000069     try
+   63   4.043465   0.041643       call s:Dispatch(content, a:server._on_message, a:server._callbacks)
+                                catch
+                                  call lsc#message#error('Error dispatching message: '.string(v:exception))
+                                  let g:lsc_last_error = v:exception
+                                  let g:lsc_last_throwpoint = v:throwpoint
+                                  let g:lsc_last_error_message = content
+   63              0.000072     endtry
+   63              0.000042   endif
+   63              0.005201   return remaining_message !=# ''
+
+FUNCTION  airline#extensions#branch#head()
+    Defined: ~/.config/nvim/plugged/vim-airline/autoload/airline/extensions/branch.vim line 239
+Called 719 times
+Total time:   0.868982
+ Self time:   0.029232
+
+count  total (s)   self (s)
+  719              0.003146   if !exists('b:buffer_vcs_config')
+                                call s:init_buffer()
+  719              0.000630   endif
+                            
+  719   0.739684   0.006935   call s:update_branch()
+  719   0.115822   0.008821   call s:update_untracked()
+                            
+  719              0.004152   if exists('b:airline_head') && !empty(b:airline_head)
+  719              0.001521     return b:airline_head
+                              endif
+                            
+                              let b:airline_head = ''
+                              let vcs_priority = get(g:, "airline#extensions#branch#vcs_priority", ["git", "mercurial"])
+                            
+                              let heads = []
+                              for vcs in vcs_priority
+                                if !empty(b:buffer_vcs_config[vcs].branch)
+                                  let heads += [vcs]
+                                endif
+                              endfor
+                            
+                              for vcs in heads
+                                if !empty(b:airline_head)
+                                  let b:airline_head .= ' | '
+                                endif
+                                if len(heads) > 1
+                                  let b:airline_head .= s:vcs_config[vcs].exe .':'
+                                endif
+                                let b:airline_head .= s:format_name({s:vcs_config[vcs].display_branch}())
+                                let additional = b:buffer_vcs_config[vcs].untracked
+                                if empty(additional) && has_key(b:buffer_vcs_config[vcs], 'dirty') && b:buffer_vcs_config[vcs].dirty
+                                  let additional = g:airline_symbols['dirty']
+                                endif
+                                let b:airline_head .= additional
+                              endfor
+                            
+                              if empty(heads)
+                                if airline#util#has_vcscommand()
+                                  noa call VCSCommandEnableBufferSetup()
+                                  if exists('b:VCSCommandBufferInfo')
+                                    let b:airline_head = s:format_name(get(b:VCSCommandBufferInfo, 0, ''))
+                                  endif
+                                endif
+                              endif
+                            
+                              if empty(heads)
+                                if airline#util#has_custom_scm()
+                                  try
+                                    let Fn = function(g:airline#extensions#branch#custom_head)
+                                    let b:airline_head = Fn()
+                                  endtry
+                                endif
+                              endif
+                            
+                              if exists("g:airline#extensions#branch#displayed_head_limit")
+                                let w:displayed_head_limit = g:airline#extensions#branch#displayed_head_limit
+                                if strwidth(b:airline_head) > w:displayed_head_limit - 1
+                                  let b:airline_head = airline#util#strcharpart(b:airline_head, 0, w:displayed_head_limit - 1) . (&encoding ==? 'utf-8' ?  '…' : '.')
+                                endif
+                              endif
+                            
+                              return b:airline_head
+
+FUNCTION  fugitive#Find()
+    Defined: ~/.config/nvim/plugged/vim-fugitive/autoload/fugitive.vim line 918
+Called 719 times
+Total time:   0.409114
+ Self time:   0.272769
+
+count  total (s)   self (s)
+  719              0.003375   if type(a:object) == type(0)
+                                let name = bufname(a:object)
+                                return FugitiveVimPath(name =~# '^$\|^/\|^\a\+:' ? name : getcwd() . '/' . name)
+  719              0.005908   elseif a:object =~# '^[~$]'
+                                let prefix = matchstr(a:object, '^[~$]\i*')
+                                let owner = expand(prefix)
+                                return FugitiveVimPath((len(owner) ? owner : prefix) . strpart(a:object, len(prefix)))
+  719   0.035623   0.027935   elseif s:Slash(a:object) =~# '^$\|^/\|^\%(\a\a\+:\).*\%(//\|::\)' . (has('win32') ? '\|^\a:/' : '')
+                                return FugitiveVimPath(a:object)
+  719   0.020809   0.013841   elseif s:Slash(a:object) =~# '^\.\.\=\%(/\|$\)'
+                                return FugitiveVimPath(simplify(getcwd() . '/' . a:object))
+  719              0.000631   endif
+  719              0.003343   let dir = a:0 ? a:1 : s:Dir()
+  719              0.001764   if empty(dir)
+                                let file = matchstr(a:object, '^\%(:\d:\|[^:]*:\)\zs.*', '', '')
+                                let dir = FugitiveExtractGitDir(file)
+                                if empty(dir)
+                                  return fnamemodify(FugitiveVimPath(len(file) ? file : a:object), ':p')
+                                endif
+  719              0.000517   endif
+  719   0.013714   0.006797   let rev = s:Slash(a:object)
+  719   0.085228   0.006768   let tree = s:Tree(dir)
+  719              0.003273   let base = len(tree) ? tree : 'fugitive://' . dir . '//0'
+  719              0.001501   if rev ==# '.git'
+                                let f = len(tree) ? tree . '/.git' : dir
+  719              0.004345   elseif rev =~# '^\.git/'
+  719              0.005818     let f = substitute(rev, '^\.git', '', '')
+  719   0.035866   0.007342     let cdir = fugitive#CommonDir(dir)
+  719              0.005167     if f =~# '^/\.\./\.\.\%(/\|$\)'
+                                  let f = simplify(len(tree) ? tree . f[3:-1] : dir . f)
+  719              0.003991     elseif f =~# '^/\.\.\%(/\|$\)'
+                                  let f = base . f[3:-1]
+  719              0.006239     elseif cdir !=# dir && ( f =~# '^/\%(config\|hooks\|info\|logs/refs\|objects\|refs\|worktrees\)\%(/\|$\)' || f !~# '^/\%(index$\|index\.lock$\|\w*MSG$\|\w*HEAD$\|logs/\w*HEAD$\|logs$\|rebase-\w\+\)\%(/\|$\)' && getftime(FugitiveVimPath(dir . f)) < 0 && getftime(FugitiveVimPath(cdir . f)) >= 0)
+                                  let f = simplify(cdir . f)
+  719              0.000636     else
+  719              0.003796       let f = simplify(dir . f)
+  719              0.000667     endif
+                              elseif rev ==# ':/'
+                                let f = base
+                              elseif rev =~# '^\.\%(/\|$\)'
+                                let f = base . rev[1:-1]
+                              elseif rev =~# '^::\%(/\|\a\+\:\)'
+                                let f = rev[2:-1]
+                              elseif rev =~# '^::\.\.\=\%(/\|$\)'
+                                let f = simplify(getcwd() . '/' . rev[2:-1])
+                              elseif rev =~# '^::'
+                                let f = base . '/' . rev[2:-1]
+                              elseif rev =~# '^:\%([0-3]:\)\=\.\.\=\%(/\|$\)\|^:[0-3]:\%(/\|\a\+:\)'
+                                let f = rev =~# '^:\%([0-3]:\)\=\.' ? simplify(getcwd() . '/' . matchstr(rev, '\..*')) : rev[3:-1]
+                                if s:cpath(base . '/', (f . '/')[0 : len(base)])
+                                  let f = 'fugitive://' . dir . '//' . +matchstr(rev, '^:\zs\d\ze:') . '/' . strpart(f, len(base) + 1)
+                                else
+                                  let altdir = FugitiveExtractGitDir(f)
+                                  if len(altdir) && !s:cpath(dir, altdir)
+                                    return fugitive#Find(a:object, altdir)
+                                  endif
+                                endif
+                              elseif rev =~# '^:[0-3]:'
+                                let f = 'fugitive://' . dir . '//' . rev[1] . '/' . rev[3:-1]
+                              elseif rev ==# ':'
+                                if $GIT_INDEX_FILE =~# '/[^/]*index[^/]*\.lock$' && s:cpath(fnamemodify($GIT_INDEX_FILE,':p')[0:strlen(dir)]) ==# s:cpath(dir . '/') && filereadable($GIT_INDEX_FILE)
+                                  let f = fnamemodify($GIT_INDEX_FILE, ':p')
+                                else
+                                  let f = fugitive#Find('.git/index', dir)
+                                endif
+                              elseif rev =~# '^:(\%(top\|top,literal\|literal,top\|literal\))'
+                                let f = matchstr(rev, ')\zs.*')
+                                if f=~# '^\.\.\=\%(/\|$\)'
+                                  let f = simplify(getcwd() . '/' . f)
+                                elseif f !~# '^/\|^\%(\a\a\+:\).*\%(//\|::\)' . (has('win32') ? '\|^\a:/' : '')
+                                  let f = base . '/' . f
+                                endif
+                              elseif rev =~# '^:/\@!'
+                                let f = 'fugitive://' . dir . '//0/' . rev[1:-1]
+                              else
+                                if !exists('f')
+                                  let commit = substitute(matchstr(rev, '^\%([^:.-]\|\.\.[^/:]\)[^:]*\|^:.*'), '^@\%($\|[~^]\|@{\)\@=', 'HEAD', '')
+                                  let file = substitute(matchstr(rev, '^\%([^:.-]\|\.\.[^/:]\)[^:]*\zs:.*'), '^:', '/', '')
+                                  if file =~# '^/\.\.\=\%(/\|$\)\|^//\|^/\a\+:'
+                                    let file = file =~# '^/\.' ? simplify(getcwd() . file) : file[1:-1]
+                                    if s:cpath(base . '/', (file . '/')[0 : len(base)])
+                                      let file = '/' . strpart(file, len(base) + 1)
+                                    else
+                                      let altdir = FugitiveExtractGitDir(file)
+                                      if len(altdir) && !s:cpath(dir, altdir)
+                                        return fugitive#Find(a:object, altdir)
+                                      endif
+                                      return file
+                                    endif
+                                  endif
+                                  let commits = split(commit, '\.\.\.-\@!', 1)
+                                  if len(commits) == 2
+                                    call map(commits, 'empty(v:val) || v:val ==# "@" ? "HEAD" : v:val')
+                                    let commit = matchstr(s:ChompDefault('', [dir, 'merge-base'] + commits + ['--']), '\<[0-9a-f]\{40,\}\>')
+                                  endif
+                                  if commit !~# '^[0-9a-f]\{40,\}$'
+                                    let commit = matchstr(s:ChompDefault('', [dir, 'rev-parse', '--verify', commit . (len(file) ? '^{}' : ''), '--']), '\<[0-9a-f]\{40,\}\>')
+                                  endif
+                                  if len(commit)
+                                    let f = 'fugitive://' . dir . '//' . commit . file
+                                  else
+                                    let f = base . '/' . substitute(rev, '^:/:\=\|^[^:]\+:', '', '')
+                                  endif
+                                endif
+  719              0.000583   endif
+  719   0.018489   0.010701   return FugitiveVimPath(f)
+
+FUNCTION  <SNR>129_OnResult()
+    Defined: ~/.config/nvim/plugged/vim-lsc/autoload/lsc/complete.vim line 101
+Called 2 times
+Total time:   3.736819
+ Self time:   0.000093
+
+count  total (s)   self (s)
+    2   0.000036   0.000019   call s:MarkNotCompleting(&filetype)
+    2              0.000002   if s:completion_canceled
+                                let b:lsc_is_completing = v:false
+    2              0.000001   endif
+    2   3.658063   0.000032   let completions = s:CompletionItems(a:completion)
+    2              0.000003   if (a:isAuto)
+    2   0.078702   0.000023     call s:SuggestCompletions(completions)
+                              else
+                                let b:lsc_completion = completions
+    2              0.000001   endif
+
+FUNCTION  <lambda>3()
+    Defined: ~/.config/nvim/plugged/vim-lsc/autoload/lsc/channel.vim line 24
+Called 82 times
+Total time:   4.853543
+ Self time:   0.022861
+
+count  total (s)   self (s)
+   82   4.853449   0.022767 return a:Callback(join(data, "\n"))
+
+FUNCTION  <SNR>129_CompletionItem()
+    Defined: ~/.config/nvim/plugged/vim-lsc/autoload/lsc/complete.vim line 257
+Called 53770 times
+Total time:   3.228753
+ Self time:   2.908721
+
+count  total (s)   self (s)
+53770              0.134974   let item = {'abbr': a:completion_item.label, 'icase': 1, 'dup': 1}
+53770              0.193044   if has_key(a:completion_item, 'textEdit') && type(a:completion_item.textEdit) == type({}) && has_key(a:completion_item.textEdit, 'newText')
+  248              0.000366     let item.word = a:completion_item.textEdit.newText
+  248              0.000449     let item.start_col = a:completion_item.textEdit.range.start.character + 1
+53522              0.124485   elseif has_key(a:completion_item, 'insertText') && !empty(a:completion_item.insertText)
+ 4950              0.006692     let item.word = a:completion_item.insertText
+48572              0.019721   else
+48572              0.063450     let item.word = a:completion_item.label
+53770              0.022407   endif
+53770              0.120095   if has_key(a:completion_item, 'insertTextFormat') && a:completion_item.insertTextFormat == 2
+                                let item.user_data = json_encode({ 'snippet': item.word, 'snippet_trigger': item.word })
+                                let l:item.word = a:completion_item.label
+53770              0.020478   endif
+53770              0.197233   if get(a:completion_item, 'deprecated', v:false) || index(get(a:completion_item, 'tags', []), 1) >=0
+  674              0.006128     let l:item.abbr = substitute(l:item.word, '.', "\\0\<char-0x0336>", 'g')
+53770              0.020473   endif
+53770              0.077650   if has_key(a:completion_item, 'kind')
+30024   0.480128   0.160095     let item.kind = s:CompletionItemKind(a:completion_item.kind)
+53770              0.021261   endif
+53770              0.125126   if has_key(a:completion_item, 'detail') && a:completion_item.detail != v:null
+47408              0.140367     let detail_lines = split(a:completion_item.detail, "\n")
+47408              0.066539     if len(detail_lines) > 0
+47400              0.066431       let item.menu = detail_lines[0]
+47400              0.064405       let l:item.info = a:completion_item.detail
+47408              0.019435     endif
+53770              0.018219   endif
+53770              0.085860   if has_key(a:completion_item, 'documentation')
+   20              0.000034     let documentation = a:completion_item.documentation
+   20              0.000026     if has_key(l:item, 'info')
+   20              0.000025       let l:item.info .= "\n\n"
+                                else
+                                  let l:item.info = ''
+   20              0.000007     endif
+   20              0.000035     if type(documentation) == type('')
+   20              0.000030       let l:item.info .= documentation
+                                elseif type(documentation) == type({}) && has_key(documentation, 'value')
+                                  let l:item.info .= documentation.value
+   20              0.000007     endif
+53770              0.017895   endif
+53770              0.040025   return item
+
+FUNCTION  295()
+    Defined: ~/.config/nvim/plugged/vim-lsc/autoload/lsc/protocol.vim line 28
+Called 82 times
+Total time:   4.830682
+ Self time:   0.086005
+
+count  total (s)   self (s)
+   82              0.017975     let self._buffer .= a:message
+  100   4.812608   0.067932     while s:Consume(self) | endwhile
+
